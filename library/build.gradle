@@ -44,13 +44,13 @@ dependencies {
   final def material_version = '1.2.0-alpha05'
   implementation "com.google.android.material:material:$material_version"
 
-  compile('com.google.api-client:google-api-client-android:1.15.0-rc') {
+  implementation('com.google.api-client:google-api-client-android:1.30.8') {
     exclude group: 'com.google.android.google-play-services', module: 'google-play-services'
     exclude group: 'junit', module: 'junit'
     exclude group: 'com.google.android', module: 'android'
   }
-  compile 'com.google.oauth-client:google-oauth-client-java6:1.15.0-rc'
-  compile 'com.google.http-client:google-http-client-jackson:1.15.0-rc'
+  implementation 'com.google.oauth-client:google-oauth-client-java6:1.30.5'
+  implementation 'com.google.http-client:google-http-client-jackson:1.29.2'
 
   testCompile 'junit:junit:4.11'
   testCompile('org.robolectric:robolectric:2.4') {

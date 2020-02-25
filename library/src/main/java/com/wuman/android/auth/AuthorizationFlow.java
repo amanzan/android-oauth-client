@@ -511,20 +511,6 @@ public class AuthorizationFlow extends AuthorizationCodeFlow {
             return (Builder) super.setRequestInitializer(requestInitializer);
         }
 
-        @Beta
-        @Deprecated
-        @Override
-        public Builder setScopes(Iterable<String> scopes) {
-            return (Builder) super.setScopes(scopes);
-        }
-
-        @Beta
-        @Deprecated
-        @Override
-        public Builder setScopes(String... scopes) {
-            return (Builder) super.setScopes(scopes);
-        }
-
         @Override
         public Builder setScopes(Collection<String> scopes) {
             return (Builder) super.setScopes(scopes);

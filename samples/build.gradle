@@ -51,20 +51,31 @@ android {
       res.srcDirs = ['res']
     }
   }
+
+  packagingOptions {
+    pickFirst  'META-INF/*'
+  }
 }
 
 //apply plugin: "android-unit-test"
 
 dependencies {
-  compile project(':library')
-  compile('de.keyboardsurfer.android.widget:crouton:1.8.1') {
+  implementation project(':library')
+  implementation('de.keyboardsurfer.android.widget:crouton:1.8.1') {
     exclude group: 'com.google.android', module: 'support-v4'
   }
-  compile 'com.squareup.picasso:picasso:2.2.0'
+  implementation 'com.squareup.picasso:picasso:2.2.0'
 
-  testCompile 'junit:junit:4.10'
-  testCompile 'org.robolectric:robolectric:2.1.+'
+  testImplementation 'junit:junit:4.12'
+  testImplementation 'org.robolectric:robolectric:2.4'
   implementation 'androidx.fragment:fragment:1.2.2'
+  implementation 'com.google.oauth-client:google-oauth-client-java6:1.30.5'
+  implementation('com.google.api-client:google-api-client-android:1.30.8') {
+    exclude group: 'com.google.android.google-play-services', module: 'google-play-services'
+    exclude group: 'junit', module: 'junit'
+    exclude group: 'com.google.android', module: 'android'
+  }
+  implementation 'com.google.http-client:google-http-client-jackson:1.29.2'
 }
 
 File signFile = rootProject.file('sign.properties')
