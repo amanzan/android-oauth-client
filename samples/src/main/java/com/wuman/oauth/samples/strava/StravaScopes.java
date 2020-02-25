@@ -12,6 +12,7 @@ package com.wuman.oauth.samples.strava;
  */
 public class StravaScopes {
     public static final String SCOPE_PUBLIC = "public";
+    public static final String SCOPE_READ = "read";
     public static final String SCOPE_VIEW_PRIVATE = "view_private";
     public static final String SCOPE_WRITE = "write";
     public static final String SCOPE_VIEW_PRIVATE_AND_WRITE = "view_private,write";

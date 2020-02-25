@@ -68,6 +68,8 @@ public class OAuthManager {
     /** ExecutorService that runs tasks in background threads. */
     private final ExecutorService mExecutor;
 
+    private OnIdTokenAvailable onIdTokenAvailable;
+
     public OAuthManager(AuthorizationFlow flow, AuthorizationUIController uiController) {
         this(flow, uiController, Executors.newSingleThreadExecutor());
     }
@@ -205,6 +207,14 @@ public class OAuthManager {
                     String code = mUIController.waitForExplicitCode();
                     TokenResponse response = mFlow.newTokenRequest(code)
                             .setRedirectUri(redirectUri).execute();
+
+                    if (onIdTokenAvailable != null) {
+                        Object idToken = response.get("id_token");
+                        if (idToken != null) {
+                            onIdTokenAvailable.setIdToken(idToken.toString());
+                        }
+                    }
+
                     credential = mFlow.createAndStoreCredential(response, userId);
                     set(credential);
                 } finally {
@@ -274,6 +284,9 @@ public class OAuthManager {
         return task;
     }
 
+    public void setOnIdTokenAvailable(OnIdTokenAvailable onIdTokenAvailable) {
+        this.onIdTokenAvailable = onIdTokenAvailable;
+    }
     /**
      * An {@code OAuthCallback} represents the callback handler to be invoked
      * when an asynchronous {@link OAuthManager} call is completed.

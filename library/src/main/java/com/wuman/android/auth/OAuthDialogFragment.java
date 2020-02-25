@@ -7,7 +7,9 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -30,6 +32,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.core.graphics.ColorUtils;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.api.client.auth.oauth.OAuthAuthorizeTemporaryTokenUrl;
@@ -59,11 +62,14 @@ class OAuthDialogFragment extends DialogFragmentCompat {
     private static final String AUTHORIZATION_EXPLICIT = "explicit";
     private static final String AUTHORIZATION_IMPLICIT = "implicit";
 
+    public static final String IOS_USER_AGENT = "Mozilla/5.0 (iPad; CPU OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) CriOS/30.0.1599.12 Mobile/11A465 Safari/8536.25 (3B92C18B-D9DE-4CB7-A02A-22FD2AF17C8F)";
+
     private AuthorizationDialogController mController;
     private boolean mFullScreen;
     private boolean mHorizontalProgress;
     private boolean mHideFullScreenTitle;
     private static boolean severalScopes;
+    private ColorStateList progressColor;
 
     private OAuthDialogFragment(android.app.DialogFragment fragment, boolean fullScreen,
                                 boolean horizontalProgress, boolean hideFullScreenTitle) {
@@ -106,28 +112,17 @@ class OAuthDialogFragment extends DialogFragmentCompat {
             frag = new OAuthDialogFragment((androidx.fragment.app.DialogFragment) fragImpl,
                     controller.fullScreen, controller.horizontalProgress, controller.hideFullScreenTitle);
             if (controller.hideFullScreenTitle) {
-                if (SDK_INT >= ICE_CREAM_SANDWICH) {
-                    ((androidx.fragment.app.DialogFragment) fragImpl).setStyle(androidx.fragment.app.DialogFragment.STYLE_NORMAL,
-                            android.R.style.Theme_Holo_Light_NoActionBar_Fullscreen
-                    );
-                } else {
-                    ((androidx.fragment.app.DialogFragment) fragImpl).setStyle(androidx.fragment.app.DialogFragment.STYLE_NORMAL,
-                            android.R.style.Theme_Black_NoTitleBar_Fullscreen
-                    );
-                }
+                ((androidx.fragment.app.DialogFragment) fragImpl).setStyle(androidx.fragment.app.DialogFragment.STYLE_NORMAL,
+                        android.R.style.Theme_Black_NoTitleBar_Fullscreen
+                );
             }
         } else {
             fragImpl = new NativeDialogFragmentImpl();
             frag = new OAuthDialogFragment((android.app.DialogFragment) fragImpl,
                     controller.fullScreen, controller.horizontalProgress, controller.hideFullScreenTitle);
             if (controller.hideFullScreenTitle) {
-                if (SDK_INT >= ICE_CREAM_SANDWICH) {
-                    ((android.app.DialogFragment) fragImpl).setStyle(DialogFragment.STYLE_NORMAL,
-                            android.R.style.Theme_Holo_Light_NoActionBar_Fullscreen);
-                } else {
-                    ((android.app.DialogFragment) fragImpl).setStyle(DialogFragment.STYLE_NORMAL,
-                            android.R.style.Theme_Black_NoTitleBar_Fullscreen);
-                }
+                ((android.app.DialogFragment) fragImpl).setStyle(DialogFragment.STYLE_NORMAL,
+                        android.R.style.Theme_Black_NoTitleBar_Fullscreen);
             }
         }
         fragImpl.setDialogFragmentCompat(frag);
@@ -167,6 +162,8 @@ class OAuthDialogFragment extends DialogFragmentCompat {
             root.addView(wv, new LayoutParams(LayoutParams.FILL_PARENT, DIALOG_HEIGHT));
         }
 
+        progressColor = toColorStateList("#005EB8");
+
         if (mHorizontalProgress && !mHideFullScreenTitle) {
             RelativeLayout pframe = new RelativeLayout(context);
             pframe.setId(android.R.id.widget_frame);
@@ -180,6 +177,7 @@ class OAuthDialogFragment extends DialogFragmentCompat {
                     new ProgressBar(context, null, android.R.attr.progressBarStyleHorizontal);
             progress.setIndeterminate(true);
             progress.setId(android.R.id.progress);
+//            progress.setIndeterminateTintList(progressColor);
             pframe.addView(progress, params);
             root.addView(pframe,
                     new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
@@ -274,6 +272,8 @@ class OAuthDialogFragment extends DialogFragmentCompat {
         WebSettings webSettings = wv.getSettings();
         webSettings.setSavePassword(false);
         webSettings.setSaveFormData(false);
+
+        webSettings.setUserAgentString(IOS_USER_AGENT);
 
         wv.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -466,5 +466,25 @@ class OAuthDialogFragment extends DialogFragmentCompat {
             }
         }
     }
+
+    private ColorStateList toColorStateList(String colorString) {
+        int color = Color.parseColor(colorString);
+        int[][] states = new int[][] {
+                new int[] { android.R.attr.state_enabled}, // enabled
+                new int[] {-android.R.attr.state_enabled}, // disabled
+                new int[] {-android.R.attr.state_checked}, // unchecked
+                new int[] { android.R.attr.state_pressed}  // pressed
+        };
+
+        int[] colors = new int[] {
+                color,
+                color,
+                color,
+                color
+        };
+
+        return new ColorStateList(states, colors);
+    }
+
 
 }

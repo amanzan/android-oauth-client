@@ -45,6 +45,8 @@ public abstract class DialogFragmentController implements AuthorizationDialogCon
     /** {@link Handler} for running UI in the main thread. */
     private final Handler uiHandler;
 
+    public String progressColor;
+
     /**
      * Verification code (for explicit authorization) or access token (for
      * implicit authorization) or {@code null} for none.
@@ -67,14 +69,14 @@ public abstract class DialogFragmentController implements AuthorizationDialogCon
      * @param fragmentManager
      */
     public DialogFragmentController(FragmentManager fragmentManager) {
-        this(fragmentManager, false);
+        this(fragmentManager, true);
     }
 
     /**
      * @param fragmentManager
      */
     public DialogFragmentController(android.app.FragmentManager fragmentManager) {
-        this(fragmentManager, false);
+        this(fragmentManager, true);
     }
 
     /**
@@ -83,7 +85,7 @@ public abstract class DialogFragmentController implements AuthorizationDialogCon
      * @param fullScreen
      */
     public DialogFragmentController(FragmentManager fragmentManager, boolean fullScreen) {
-        this(fragmentManager, fullScreen, false);
+        this(fragmentManager, fullScreen, true);
     }
 
     /**
@@ -92,7 +94,7 @@ public abstract class DialogFragmentController implements AuthorizationDialogCon
      * @param fullScreen
      */
     public DialogFragmentController(android.app.FragmentManager fragmentManager, boolean fullScreen) {
-        this(fragmentManager, fullScreen, false);
+        this(fragmentManager, fullScreen, true);
     }
 
     /**
@@ -103,7 +105,7 @@ public abstract class DialogFragmentController implements AuthorizationDialogCon
      */
     public DialogFragmentController(FragmentManager fragmentManager, boolean fullScreen,
         boolean horizontalProgress) {
-        this(fragmentManager, fullScreen, horizontalProgress, false);
+        this(fragmentManager, fullScreen, horizontalProgress, true);
     }
 
     /**
@@ -114,7 +116,7 @@ public abstract class DialogFragmentController implements AuthorizationDialogCon
      */
     public DialogFragmentController(android.app.FragmentManager fragmentManager, boolean fullScreen,
         boolean horizontalProgress) {
-        this(fragmentManager, fullScreen, horizontalProgress, false);
+        this(fragmentManager, fullScreen, horizontalProgress, true);
     }
 
     /**
@@ -299,6 +301,10 @@ public abstract class DialogFragmentController implements AuthorizationDialogCon
     public boolean setProgressShown(String url, View view, int newProgress) {
         // use default implementation in DialogFragment
         return false;
+    }
+
+    public void setProgressColor(String progressColor) {
+        this.progressColor = progressColor;
     }
 
 }

@@ -173,7 +173,7 @@ public class StravaActivity extends FragmentActivity {
                     .build();
             // setup UI controller
             AuthorizationDialogController controller =
-                    new DialogFragmentController(getFragmentManager(), fullScreen) {
+                    new DialogFragmentController(getFragmentManager()) {
                         @Override
                         public String getRedirectUri() throws IOException {
                             return StravaConstants.REDIRECT_URL;
