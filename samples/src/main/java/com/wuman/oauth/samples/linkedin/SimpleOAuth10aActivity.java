@@ -3,11 +3,6 @@ package com.wuman.oauth.samples.linkedin;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,6 +15,12 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 
 import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.ClientParametersAuthentication;
@@ -206,7 +207,7 @@ public class SimpleOAuth10aActivity extends FragmentActivity {
 
         @Override
         public void onLoadFinished(Loader<Result<Credential>> loader,
-                Result<Credential> result) {
+                                   Result<Credential> result) {
             if (loader.getId() == LOADER_GET_TOKEN) {
                 message.setText(result.success ? result.data.getAccessToken() : "");
             } else {

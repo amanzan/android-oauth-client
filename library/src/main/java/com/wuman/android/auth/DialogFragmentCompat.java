@@ -10,13 +10,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 class DialogFragmentCompat extends FragmentCompat {
 
-    private android.support.v4.app.DialogFragment supportDialogFragment;
+    private DialogFragment supportDialogFragment;
     private android.app.DialogFragment nativeDialogFragment;
 
-    DialogFragmentCompat(android.support.v4.app.DialogFragment supportDialogFragment) {
+    DialogFragmentCompat(DialogFragment supportDialogFragment) {
         super(supportDialogFragment);
         this.supportDialogFragment = supportDialogFragment;
     }
@@ -35,8 +40,8 @@ class DialogFragmentCompat extends FragmentCompat {
     static DialogFragmentCompat newInstance(Object fragment) {
         if (fragment == null) {
             return null;
-        } else if (fragment instanceof android.support.v4.app.DialogFragment) {
-            return new DialogFragmentCompat((android.support.v4.app.DialogFragment) fragment);
+        } else if (fragment instanceof DialogFragment) {
+            return new DialogFragmentCompat((DialogFragment) fragment);
         } else if (fragment instanceof android.app.DialogFragment) {
             return new DialogFragmentCompat((android.app.DialogFragment) fragment);
         } else {
@@ -47,7 +52,7 @@ class DialogFragmentCompat extends FragmentCompat {
     final void show(FragmentManagerCompat manager, String tag) {
         if (supportDialogFragment != null) {
             supportDialogFragment.show(
-                    (android.support.v4.app.FragmentManager) manager.getFragmentManager(), tag);
+                    (FragmentManager) manager.getFragmentManager(), tag);
         } else {
             nativeDialogFragment.show(
                     (android.app.FragmentManager) manager.getFragmentManager(), tag);
@@ -56,7 +61,7 @@ class DialogFragmentCompat extends FragmentCompat {
 
     final void show(FragmentTransactionCompat transaction, String tag) {
         if (supportDialogFragment != null) {
-            supportDialogFragment.show((android.support.v4.app.FragmentTransaction)
+            supportDialogFragment.show((FragmentTransaction)
                     transaction.getFragmentTransaction(), tag);
         } else {
             nativeDialogFragment.show(
@@ -66,9 +71,9 @@ class DialogFragmentCompat extends FragmentCompat {
 
     final void showAllowingStateLoss(FragmentTransactionCompat transaction, String tag) {
         if (supportDialogFragment != null) {
-            ((android.support.v4.app.FragmentTransaction) transaction.getFragmentTransaction())
+            ((FragmentTransaction) transaction.getFragmentTransaction())
                 .add(supportDialogFragment, tag);
-            ((android.support.v4.app.FragmentTransaction) transaction.getFragmentTransaction())
+            ((FragmentTransaction) transaction.getFragmentTransaction())
                 .commitAllowingStateLoss();
         } else {
             ((android.app.FragmentTransaction) transaction.getFragmentTransaction())
@@ -86,6 +91,7 @@ class DialogFragmentCompat extends FragmentCompat {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB_MR1)
     final void dismissAllowingStateLoss() {
         if (supportDialogFragment != null) {
             supportDialogFragment.dismissAllowingStateLoss();
@@ -193,7 +199,7 @@ class DialogFragmentCompat extends FragmentCompat {
 
     }
 
-    public static class SupportDialogFragmentImpl extends android.support.v4.app.DialogFragment
+    public static class SupportDialogFragmentImpl extends DialogFragment
             implements BaseDialogFragmentImpl {
         private DialogFragmentCompat mCompat;
 

@@ -6,6 +6,8 @@ import android.annotation.TargetApi;
 import android.app.FragmentManager;
 import android.os.Build;
 
+import androidx.annotation.RequiresApi;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,7 +17,7 @@ class FragmentManagerCompat {
 
     static final Logger LOGGER = Logger.getLogger(OAuthConstants.TAG);
 
-    private android.support.v4.app.FragmentManager supportFragmentManager;
+    private androidx.fragment.app.FragmentManager supportFragmentManager;
     private android.app.FragmentManager nativeFragmentManager;
 
     FragmentManagerCompat(FragmentManager nativeFragmentManager) {
@@ -23,7 +25,7 @@ class FragmentManagerCompat {
         this.nativeFragmentManager = nativeFragmentManager;
     }
 
-    FragmentManagerCompat(android.support.v4.app.FragmentManager supportFragmentManager) {
+    FragmentManagerCompat(androidx.fragment.app.FragmentManager supportFragmentManager) {
         super();
         this.supportFragmentManager = supportFragmentManager;
     }
@@ -32,6 +34,7 @@ class FragmentManagerCompat {
         return supportFragmentManager != null ? supportFragmentManager : nativeFragmentManager;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     boolean isDestroyed() {
         if (supportFragmentManager != null) {
             return supportFragmentManager.isDestroyed();

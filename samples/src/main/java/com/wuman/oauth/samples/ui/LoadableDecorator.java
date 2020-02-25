@@ -2,13 +2,13 @@
 package com.wuman.oauth.samples.ui;
 
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.Loader;
 import android.util.SparseBooleanArray;
 import android.widget.Adapter;
 import android.widget.AdapterView;
+
+import androidx.fragment.app.ListFragment;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 
 import com.google.api.client.util.Preconditions;
 import com.wuman.oauth.samples.AsyncResourceLoader.Result;
@@ -21,7 +21,7 @@ import de.keyboardsurfer.android.widget.crouton.Style;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class LoadableDecorator<T> implements LoaderCallbacks<Result<T>> {
+public class LoadableDecorator<T> implements LoaderManager.LoaderCallbacks<Result<T>> {
 
     static final Logger LOGGER = Logger.getLogger(SamplesConstants.TAG);
 
@@ -31,8 +31,8 @@ public class LoadableDecorator<T> implements LoaderCallbacks<Result<T>> {
     private final AdapterView<?> mAdapterView;
     private final SparseBooleanArray mActive = new SparseBooleanArray();
 
-    public LoadableDecorator(LoaderCallbacks<Result<T>> callbacks, int loaderId,
-            ListFragment listFragment) {
+    public LoadableDecorator(LoaderManager.LoaderCallbacks<Result<T>> callbacks, int loaderId,
+                             ListFragment listFragment) {
         super();
         this.mCallbacks = Preconditions.checkNotNull(callbacks);
         this.mLoaderId = loaderId;

@@ -2,10 +2,10 @@
 package com.wuman.oauth.samples.twitter;
 
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.Loader;
 import android.text.TextUtils;
+
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 
 import com.google.api.client.util.Preconditions;
 import com.wuman.oauth.samples.AsyncResourceLoader.Result;
@@ -29,7 +29,7 @@ public class TweetsLoadable implements Loadable<Timeline> {
     private String mNextMaxId;
 
     TweetsLoadable(LoaderManager loaderManager, int loaderId,
-            LoaderCallbacks<Result<Timeline>> callbacks) {
+            LoaderManager.LoaderCallbacks<Result<Timeline>> callbacks) {
         super();
         this.mLoaderManager = Preconditions.checkNotNull(loaderManager);
         this.mLoaderId = loaderId;

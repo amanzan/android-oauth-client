@@ -2,9 +2,9 @@
 package com.wuman.oauth.samples.flickr;
 
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.Loader;
+
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 
 import com.google.api.client.util.Preconditions;
 import com.wuman.oauth.samples.AsyncResourceLoader.Result;
@@ -22,7 +22,7 @@ public class PhotosLoadable implements Loadable<ContactsPhotos> {
     private boolean mHasMore;
 
     PhotosLoadable(LoaderManager loaderManager, int loaderId,
-            LoaderCallbacks<Result<ContactsPhotos>> callbacks) {
+            LoaderManager.LoaderCallbacks<Result<ContactsPhotos>> callbacks) {
         super();
         this.mLoaderManager = Preconditions.checkNotNull(loaderManager);
         this.mLoaderId = loaderId;

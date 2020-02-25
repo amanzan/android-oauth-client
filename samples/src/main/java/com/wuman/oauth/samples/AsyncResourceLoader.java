@@ -2,8 +2,9 @@
 package com.wuman.oauth.samples;
 
 import android.content.Context;
-import android.support.v4.content.AsyncTaskLoader;
 import android.text.TextUtils;
+
+import androidx.loader.content.AsyncTaskLoader;
 
 import com.google.api.client.auth.oauth2.TokenErrorResponse;
 import com.google.api.client.auth.oauth2.TokenResponseException;

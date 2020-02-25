@@ -3,17 +3,18 @@ package com.wuman.oauth.samples.flickr;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.ListFragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.ListFragment;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 
 import com.google.api.client.auth.oauth2.ClientParametersAuthentication;
 import com.google.api.client.auth.oauth2.Credential;
@@ -200,7 +201,7 @@ public class FlickrActivity extends FragmentActivity {
 
         @Override
         public void onLoadFinished(Loader<Result<ContactsPhotos>> loader,
-                Result<ContactsPhotos> result) {
+                                   Result<ContactsPhotos> result) {
             mAdapter.setData(result.data, true);
         }
 

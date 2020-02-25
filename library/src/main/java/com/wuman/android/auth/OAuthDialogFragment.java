@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -29,6 +30,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.fragment.app.FragmentManager;
+
 import com.google.api.client.auth.oauth.OAuthAuthorizeTemporaryTokenUrl;
 import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
 import com.google.api.client.auth.oauth2.AuthorizationCodeResponseUrl;
@@ -37,6 +40,7 @@ import com.wuman.android.auth.oauth.OAuth10aResponseUrl;
 import com.wuman.android.auth.oauth2.implicit.ImplicitResponseUrl;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -59,17 +63,18 @@ class OAuthDialogFragment extends DialogFragmentCompat {
     private boolean mFullScreen;
     private boolean mHorizontalProgress;
     private boolean mHideFullScreenTitle;
+    private static boolean severalScopes;
 
     private OAuthDialogFragment(android.app.DialogFragment fragment, boolean fullScreen,
-        boolean horizontalProgress, boolean hideFullScreenTitle) {
+                                boolean horizontalProgress, boolean hideFullScreenTitle) {
         super(fragment);
         this.mFullScreen = fullScreen;
         this.mHorizontalProgress = horizontalProgress;
         this.mHideFullScreenTitle = hideFullScreenTitle;
     }
 
-    private OAuthDialogFragment(android.support.v4.app.DialogFragment fragment,
-        boolean fullScreen, boolean horizontalProgress, boolean hideFullScreenTitle) {
+    private OAuthDialogFragment(androidx.fragment.app.DialogFragment fragment,
+                                boolean fullScreen, boolean horizontalProgress, boolean hideFullScreenTitle) {
         super(fragment);
         this.mFullScreen = fullScreen;
         this.mHorizontalProgress = horizontalProgress;
@@ -84,6 +89,7 @@ class OAuthDialogFragment extends DialogFragmentCompat {
     public static final OAuthDialogFragment newInstance(
             GenericUrl authorizationRequestUrl,
             DialogFragmentController controller) {
+        severalScopes = authorizationRequestUrl.get("scope") != null && authorizationRequestUrl.get("scope").toString().contains(" ");
         Bundle args = new Bundle();
         args.putString(ARG_AUTHORIZATION_REQUEST_URL, authorizationRequestUrl.build());
         if (authorizationRequestUrl instanceof OAuthAuthorizeTemporaryTokenUrl) {
@@ -95,34 +101,32 @@ class OAuthDialogFragment extends DialogFragmentCompat {
         }
         BaseDialogFragmentImpl fragImpl;
         OAuthDialogFragment frag;
-        if (controller.getFragmentManager() instanceof android.support.v4.app.FragmentManager) {
+        if (controller.getFragmentManager() instanceof FragmentManager) {
             fragImpl = new SupportDialogFragmentImpl();
-            frag = new OAuthDialogFragment((android.support.v4.app.DialogFragment) fragImpl,
-                controller.fullScreen, controller.horizontalProgress, controller.hideFullScreenTitle);
+            frag = new OAuthDialogFragment((androidx.fragment.app.DialogFragment) fragImpl,
+                    controller.fullScreen, controller.horizontalProgress, controller.hideFullScreenTitle);
             if (controller.hideFullScreenTitle) {
                 if (SDK_INT >= ICE_CREAM_SANDWICH) {
-                    ((android.support.v4.app.DialogFragment) fragImpl).setStyle(android.support
-                            .v4.app.DialogFragment.STYLE_NORMAL,
-                        android.R.style.Theme_Holo_Light_NoActionBar_Fullscreen
+                    ((androidx.fragment.app.DialogFragment) fragImpl).setStyle(androidx.fragment.app.DialogFragment.STYLE_NORMAL,
+                            android.R.style.Theme_Holo_Light_NoActionBar_Fullscreen
                     );
                 } else {
-                    ((android.support.v4.app.DialogFragment) fragImpl).setStyle(android.support
-                            .v4.app.DialogFragment.STYLE_NORMAL,
-                        android.R.style.Theme_Black_NoTitleBar_Fullscreen
+                    ((androidx.fragment.app.DialogFragment) fragImpl).setStyle(androidx.fragment.app.DialogFragment.STYLE_NORMAL,
+                            android.R.style.Theme_Black_NoTitleBar_Fullscreen
                     );
                 }
             }
         } else {
             fragImpl = new NativeDialogFragmentImpl();
             frag = new OAuthDialogFragment((android.app.DialogFragment) fragImpl,
-                controller.fullScreen, controller.horizontalProgress, controller.hideFullScreenTitle);
+                    controller.fullScreen, controller.horizontalProgress, controller.hideFullScreenTitle);
             if (controller.hideFullScreenTitle) {
                 if (SDK_INT >= ICE_CREAM_SANDWICH) {
                     ((android.app.DialogFragment) fragImpl).setStyle(DialogFragment.STYLE_NORMAL,
-                        android.R.style.Theme_Holo_Light_NoActionBar_Fullscreen);
+                            android.R.style.Theme_Holo_Light_NoActionBar_Fullscreen);
                 } else {
                     ((android.app.DialogFragment) fragImpl).setStyle(DialogFragment.STYLE_NORMAL,
-                        android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+                            android.R.style.Theme_Black_NoTitleBar_Fullscreen);
                 }
             }
         }
@@ -168,17 +172,17 @@ class OAuthDialogFragment extends DialogFragmentCompat {
             pframe.setId(android.R.id.widget_frame);
             pframe.setVisibility(View.GONE);
             RelativeLayout.LayoutParams params =
-                new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-                    LayoutParams.WRAP_CONTENT);
+                    new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+                            LayoutParams.WRAP_CONTENT);
             params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             params.topMargin = -20;
             ProgressBar progress =
-                new ProgressBar(context, null, android.R.attr.progressBarStyleHorizontal);
+                    new ProgressBar(context, null, android.R.attr.progressBarStyleHorizontal);
             progress.setIndeterminate(true);
             progress.setId(android.R.id.progress);
             pframe.addView(progress, params);
             root.addView(pframe,
-                new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+                    new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
         } else {
             LinearLayout pframe = new LinearLayout(context);
             pframe.setId(android.R.id.widget_frame);
@@ -186,20 +190,20 @@ class OAuthDialogFragment extends DialogFragmentCompat {
             pframe.setVisibility(View.GONE);
             pframe.setGravity(Gravity.CENTER);
             ProgressBar progress =
-                new ProgressBar(context, null, android.R.attr.progressBarStyleLarge);
+                    new ProgressBar(context, null, android.R.attr.progressBarStyleLarge);
             progress.setId(android.R.id.progress);
             pframe.addView(progress,
-                new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+                    new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
             TextView progressText = new TextView(context, null, android.R.attr.textViewStyle);
             progressText.setId(android.R.id.text1);
             pframe.addView(progressText,
-                new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+                    new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
             if (mFullScreen && mHideFullScreenTitle) {
                 root.addView(pframe,
-                    new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+                        new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
             } else {
                 root.addView(pframe,
-                    new LayoutParams(LayoutParams.FILL_PARENT, DIALOG_HEIGHT));
+                        new LayoutParams(LayoutParams.FILL_PARENT, DIALOG_HEIGHT));
             }
         }
 
@@ -333,7 +337,7 @@ class OAuthDialogFragment extends DialogFragmentCompat {
 
             @Override
             public void onReceivedError(WebView view, int errorCode, String description,
-                    String failingUrl) {
+                                        String failingUrl) {
                 super.onReceivedError(view, errorCode, description, failingUrl);
                 onError(description);
             }
@@ -392,7 +396,18 @@ class OAuthDialogFragment extends DialogFragmentCompat {
     void onActivityCreated(Bundle savedInstanceState) {
         WebView wv = (WebView) getView().findViewById(android.R.id.primary);
         if (wv != null) {
-            wv.loadUrl(getArguments().getString(ARG_AUTHORIZATION_REQUEST_URL));
+            String requestUrl = getArguments().getString(ARG_AUTHORIZATION_REQUEST_URL);
+            if (severalScopes) {
+                try {
+                    String redirectUri = mController.getRedirectUri();
+                    requestUrl = requestUrl.replace(redirectUri, URLEncoder.encode(redirectUri, "UTF-8"));
+                } catch (IOException e) {
+                    Log.e("IOException", e.getLocalizedMessage());
+                }
+            }
+
+            wv.loadUrl(requestUrl);
+
         }
         if (mFullScreen) {
             getDialog().getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
@@ -400,10 +415,10 @@ class OAuthDialogFragment extends DialogFragmentCompat {
         }
         if (mHorizontalProgress) {
             View divider = getDialog().findViewById(getDialog().getContext().getResources()
-                .getIdentifier("android:id/titleDivider", null, null));
+                    .getIdentifier("android:id/titleDivider", null, null));
             if (divider != null) {
                 divider.setBackgroundColor(getDialog().getContext().getResources().getColor(
-                    android.R.color.background_dark));
+                        android.R.color.background_dark));
             }
         }
     }

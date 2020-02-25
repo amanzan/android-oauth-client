@@ -8,13 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 class FragmentCompat {
 
-    private android.support.v4.app.Fragment supportFragment;
+    private Fragment supportFragment;
     private android.app.Fragment nativeFragment;
 
-    FragmentCompat(android.support.v4.app.Fragment supportFragment) {
+    FragmentCompat(Fragment supportFragment) {
         super();
         this.supportFragment = supportFragment;
     }
@@ -33,8 +35,8 @@ class FragmentCompat {
     static FragmentCompat newInstance(Object fragment) {
         if (fragment == null) {
             return null;
-        } else if (fragment instanceof android.support.v4.app.Fragment) {
-            return new FragmentCompat((android.support.v4.app.Fragment) fragment);
+        } else if (fragment instanceof Fragment) {
+            return new FragmentCompat((Fragment) fragment);
         } else if (fragment instanceof android.app.Fragment) {
             return new FragmentCompat((android.app.Fragment) fragment);
         } else {

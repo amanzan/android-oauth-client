@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.FragmentManager;
+
 import com.google.api.client.auth.oauth.OAuthAuthorizeTemporaryTokenUrl;
 import com.google.api.client.auth.oauth2.AuthorizationCodeRequestUrl;
 import com.google.api.client.auth.oauth2.BrowserClientRequestUrl;
@@ -64,7 +66,7 @@ public abstract class DialogFragmentController implements AuthorizationDialogCon
     /**
      * @param fragmentManager
      */
-    public DialogFragmentController(android.support.v4.app.FragmentManager fragmentManager) {
+    public DialogFragmentController(FragmentManager fragmentManager) {
         this(fragmentManager, false);
     }
 
@@ -80,7 +82,7 @@ public abstract class DialogFragmentController implements AuthorizationDialogCon
      * @param fragmentManager
      * @param fullScreen
      */
-    public DialogFragmentController(android.support.v4.app.FragmentManager fragmentManager, boolean fullScreen) {
+    public DialogFragmentController(FragmentManager fragmentManager, boolean fullScreen) {
         this(fragmentManager, fullScreen, false);
     }
 
@@ -99,7 +101,7 @@ public abstract class DialogFragmentController implements AuthorizationDialogCon
      * @param fullScreen
      * @param horizontalProgress
      */
-    public DialogFragmentController(android.support.v4.app.FragmentManager fragmentManager, boolean fullScreen,
+    public DialogFragmentController(FragmentManager fragmentManager, boolean fullScreen,
         boolean horizontalProgress) {
         this(fragmentManager, fullScreen, horizontalProgress, false);
     }
@@ -122,7 +124,7 @@ public abstract class DialogFragmentController implements AuthorizationDialogCon
      * @param horizontalProgress
      * @param hideFullScreenTitle if you set this flag to true, {@param horizontalProgress} will be ignored
      */
-    public DialogFragmentController(android.support.v4.app.FragmentManager fragmentManager, boolean fullScreen,
+    public DialogFragmentController(FragmentManager fragmentManager, boolean fullScreen,
         boolean horizontalProgress, boolean hideFullScreenTitle) {
         super();
         this.uiHandler = new Handler(Looper.getMainLooper());

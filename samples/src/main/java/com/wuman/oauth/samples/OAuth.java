@@ -3,8 +3,9 @@ package com.wuman.oauth.samples;
 
 import android.content.Context;
 import android.os.Handler;
-import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
+
+import androidx.fragment.app.FragmentManager;
 
 import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.ClientParametersAuthentication;

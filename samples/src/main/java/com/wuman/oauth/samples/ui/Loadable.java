@@ -1,11 +1,12 @@
 
 package com.wuman.oauth.samples.ui;
 
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
+
+import androidx.loader.app.LoaderManager;
 
 import com.wuman.oauth.samples.AsyncResourceLoader.Result;
 
-public interface Loadable<T> extends LoaderCallbacks<Result<T>> {
+public interface Loadable<T> extends LoaderManager.LoaderCallbacks<Result<T>> {
 
     boolean hasMore();
 

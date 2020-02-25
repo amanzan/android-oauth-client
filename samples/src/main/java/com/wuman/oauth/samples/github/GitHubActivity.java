@@ -3,11 +3,6 @@ package com.wuman.oauth.samples.github;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.ListFragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.TextAppearanceSpan;
@@ -18,6 +13,12 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
+
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.ListFragment;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 
 import com.google.api.client.auth.oauth2.ClientParametersAuthentication;
 import com.google.api.client.auth.oauth2.Credential;
@@ -204,7 +205,7 @@ public class GitHubActivity extends FragmentActivity {
             setHasOptionsMenu(true);
 
             mAdapter = new RepositoriesAdapter(getActivity().getApplicationContext());
-            mLoadable = new RepositoriesLoadable(getLoaderManager(), 0,
+            mLoadable = new RepositoriesLoadable(LoaderManager.getInstance(this), 0,
                     new LoadableDecorator<Repositories>(this, 0, this));
             setListAdapter(new ContentDecoratorAdapter(mLoadable, mAdapter));
             getListView().setOnScrollListener(new ListScrollListener(mLoadable));

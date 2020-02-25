@@ -2,10 +2,10 @@
 package com.wuman.oauth.samples.instagram;
 
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.Loader;
 import android.text.TextUtils;
+
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 
 import com.google.api.client.util.Preconditions;
 import com.wuman.oauth.samples.AsyncResourceLoader.Result;
@@ -25,7 +25,7 @@ public class FeedLoadable implements Loadable<Feed> {
     private boolean mHasMore;
     private String mNextMaxId;
 
-    FeedLoadable(LoaderManager loaderManager, int loaderId, LoaderCallbacks<Result<Feed>> callbacks) {
+    FeedLoadable(LoaderManager loaderManager, int loaderId, LoaderManager.LoaderCallbacks<Result<Feed>> callbacks) {
         super();
         this.mLoaderManager = Preconditions.checkNotNull(loaderManager);
         this.mLoaderId = loaderId;

@@ -2,11 +2,12 @@ package com.wuman.oauth.samples.ui;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.ViewStub;
 import android.view.Window;
 import android.webkit.WebView;
+
+import androidx.fragment.app.FragmentActivity;
 
 import com.wuman.oauth.samples.R;
 
