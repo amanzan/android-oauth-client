@@ -20,12 +20,12 @@ def buildTime() {
 }
 
 android {
-  compileSdkVersion 28
+  compileSdkVersion 29
   buildToolsVersion '28.0.3'
 
   defaultConfig {
-    minSdkVersion 14
-    targetSdkVersion 28
+    minSdkVersion 24
+    targetSdkVersion 29
 
     versionName rootProject.ext.versionName
     versionCode computeVersionCode(rootProject.ext.versionName)

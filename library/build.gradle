@@ -12,7 +12,7 @@ configurations {
 }
 
 android {
-  compileSdkVersion rootProject.ext.compileSdkVersion
+  compileSdkVersion 29
   buildToolsVersion '28.0.3'
 
   lintOptions {
@@ -27,7 +27,7 @@ android {
     }
   }
   defaultConfig {
-    minSdkVersion 14
+    minSdkVersion 24
   }
 }
 
@@ -36,12 +36,12 @@ android {
 dependencies {
   // AndroidX
   final def appcompat_version = '1.1.0'
-  final def core_version = "1.1.0"
+  final def core_version = "1.2.0"
   implementation "androidx.appcompat:appcompat:$appcompat_version"
   implementation "androidx.core:core-ktx:$core_version"
 
   // Material components
-  final def material_version = '1.2.0-alpha02'
+  final def material_version = '1.2.0-alpha05'
   implementation "com.google.android.material:material:$material_version"
 
   compile('com.google.api-client:google-api-client-android:1.15.0-rc') {

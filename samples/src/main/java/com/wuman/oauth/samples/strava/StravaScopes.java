@@ -11,7 +11,7 @@ package com.wuman.oauth.samples.strava;
  * http://strava.github.io/api/v3/oauth/
  */
 public class StravaScopes {
-    public static final String SCOPE_PUBLIC = "public";
+    public static final String SCOPE_PUBLIC = "read";
     public static final String SCOPE_READ = "read";
     public static final String SCOPE_VIEW_PRIVATE = "view_private";
     public static final String SCOPE_WRITE = "write";

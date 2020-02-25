@@ -69,8 +69,8 @@ class OAuthDialogFragment extends DialogFragmentCompat {
     private boolean mHorizontalProgress;
     private boolean mHideFullScreenTitle;
     private static boolean severalScopes;
-    private ColorStateList progressColor;
-
+    private String progressColor;
+    
     private OAuthDialogFragment(android.app.DialogFragment fragment, boolean fullScreen,
                                 boolean horizontalProgress, boolean hideFullScreenTitle) {
         super(fragment);
@@ -80,11 +80,13 @@ class OAuthDialogFragment extends DialogFragmentCompat {
     }
 
     private OAuthDialogFragment(androidx.fragment.app.DialogFragment fragment,
-                                boolean fullScreen, boolean horizontalProgress, boolean hideFullScreenTitle) {
+                                boolean fullScreen, boolean horizontalProgress,
+                                boolean hideFullScreenTitle, String progressColor) {
         super(fragment);
         this.mFullScreen = fullScreen;
         this.mHorizontalProgress = horizontalProgress;
         this.mHideFullScreenTitle = hideFullScreenTitle;
+        this.progressColor = progressColor;
     }
 
     final void setController(AuthorizationDialogController controller) {
@@ -110,10 +112,10 @@ class OAuthDialogFragment extends DialogFragmentCompat {
         if (controller.getFragmentManager() instanceof FragmentManager) {
             fragImpl = new SupportDialogFragmentImpl();
             frag = new OAuthDialogFragment((androidx.fragment.app.DialogFragment) fragImpl,
-                    controller.fullScreen, controller.horizontalProgress, controller.hideFullScreenTitle);
+                    controller.fullScreen, controller.horizontalProgress, controller.hideFullScreenTitle, controller.progressColor);
             if (controller.hideFullScreenTitle) {
                 ((androidx.fragment.app.DialogFragment) fragImpl).setStyle(androidx.fragment.app.DialogFragment.STYLE_NORMAL,
-                        android.R.style.Theme_Black_NoTitleBar_Fullscreen
+                        android.R.style.Theme_Material_Wallpaper_NoTitleBar
                 );
             }
         } else {
@@ -151,18 +153,16 @@ class OAuthDialogFragment extends DialogFragmentCompat {
         final int DIALOG_HEIGHT = (int) Math.min(0.8f * metrics.heightPixels, 1024);
 
         FrameLayout root = new FrameLayout(context);
-        root.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+        root.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
         WebView wv = new WebView(context);
         wv.setId(android.R.id.primary);
 
         if (mFullScreen) {
-            root.addView(wv, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+            root.addView(wv, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         } else {
-            root.addView(wv, new LayoutParams(LayoutParams.FILL_PARENT, DIALOG_HEIGHT));
+            root.addView(wv, new LayoutParams(LayoutParams.MATCH_PARENT, DIALOG_HEIGHT));
         }
-
-        progressColor = toColorStateList("#005EB8");
 
         if (mHorizontalProgress && !mHideFullScreenTitle) {
             RelativeLayout pframe = new RelativeLayout(context);
@@ -177,10 +177,10 @@ class OAuthDialogFragment extends DialogFragmentCompat {
                     new ProgressBar(context, null, android.R.attr.progressBarStyleHorizontal);
             progress.setIndeterminate(true);
             progress.setId(android.R.id.progress);
-//            progress.setIndeterminateTintList(progressColor);
+
             pframe.addView(progress, params);
             root.addView(pframe,
-                    new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+                    new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         } else {
             LinearLayout pframe = new LinearLayout(context);
             pframe.setId(android.R.id.widget_frame);
@@ -189,7 +189,10 @@ class OAuthDialogFragment extends DialogFragmentCompat {
             pframe.setGravity(Gravity.CENTER);
             ProgressBar progress =
                     new ProgressBar(context, null, android.R.attr.progressBarStyleLarge);
+//            progress.setIndeterminate(true);
             progress.setId(android.R.id.progress);
+            progress.setIndeterminateTintList(toColorStateList(progressColor));
+
             pframe.addView(progress,
                     new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
             TextView progressText = new TextView(context, null, android.R.attr.textViewStyle);
@@ -198,10 +201,10 @@ class OAuthDialogFragment extends DialogFragmentCompat {
                     new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
             if (mFullScreen && mHideFullScreenTitle) {
                 root.addView(pframe,
-                        new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+                        new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
             } else {
                 root.addView(pframe,
-                        new LayoutParams(LayoutParams.FILL_PARENT, DIALOG_HEIGHT));
+                        new LayoutParams(LayoutParams.MATCH_PARENT, DIALOG_HEIGHT));
             }
         }
 
@@ -363,14 +366,30 @@ class OAuthDialogFragment extends DialogFragmentCompat {
                         mController.set(responseUrl.getVerifier(), responseUrl.getError(), null,
                                 true);
                     } else if (TextUtils.equals(authorizationType, AUTHORIZATION_EXPLICIT)) {
-                        AuthorizationCodeResponseUrl responseUrl =
-                                new AuthorizationCodeResponseUrl(url);
-                        String error = responseUrl.getError();
-                        if (!TextUtils.isEmpty(error)
-                                && !TextUtils.isEmpty(responseUrl.getErrorDescription())) {
-                            error += (": " + responseUrl.getErrorDescription());
+                        try {
+                            AuthorizationCodeResponseUrl responseUrl =
+                                    new AuthorizationCodeResponseUrl(url);
+                            String error = responseUrl.getError();
+                            if (!TextUtils.isEmpty(error)
+                                    && !TextUtils.isEmpty(responseUrl.getErrorDescription())) {
+                                error += (": " + responseUrl.getErrorDescription());
+                            }
+                            mController.set(responseUrl.getCode(), error, null, true);
+                        } catch (Exception e ) {
+                            LOGGER.info("EXCEPTION CAUGHT: Strava's response is not standard, apparently");
+                            String urlAfterCode = url.substring(url.indexOf("code=") + 5);
+                            int indexOfNextAmpersand = urlAfterCode.indexOf("&");
+                            String accessCode;
+                            if (indexOfNextAmpersand == -1) {
+                                accessCode = urlAfterCode;
+                            } else {
+                                accessCode = urlAfterCode.substring(0, indexOfNextAmpersand);
+                            }
+
+                            String code = url.substring(url.indexOf("code=") + 5, url.indexOf("&scope"));
+                            mController.set(accessCode, null, null, true);
+//                            return true;
                         }
-                        mController.set(responseUrl.getCode(), error, null, true);
                     } else { // implicit
                         ImplicitResponseUrl implicitResponseUrl = new ImplicitResponseUrl(url);
                         String error = implicitResponseUrl.getError();

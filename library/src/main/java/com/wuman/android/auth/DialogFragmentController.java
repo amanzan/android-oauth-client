@@ -45,7 +45,7 @@ public abstract class DialogFragmentController implements AuthorizationDialogCon
     /** {@link Handler} for running UI in the main thread. */
     private final Handler uiHandler;
 
-    public String progressColor;
+    public String progressColor = "#490D82";
 
     /**
      * Verification code (for explicit authorization) or access token (for
@@ -128,6 +128,16 @@ public abstract class DialogFragmentController implements AuthorizationDialogCon
      */
     public DialogFragmentController(FragmentManager fragmentManager, boolean fullScreen,
         boolean horizontalProgress, boolean hideFullScreenTitle) {
+        this(fragmentManager, fullScreen, horizontalProgress, hideFullScreenTitle, "#490D82");
+    }
+
+    public DialogFragmentController(FragmentManager fragmentManager, String progressColor) {
+        this(fragmentManager, true, false, true, progressColor);
+    }
+
+    public DialogFragmentController(FragmentManager fragmentManager, boolean fullScreen,
+                                    boolean horizontalProgress, boolean hideFullScreenTitle,
+                                    String progressColor) {
         super();
         this.uiHandler = new Handler(Looper.getMainLooper());
         this.fragmentManager =
@@ -135,6 +145,7 @@ public abstract class DialogFragmentController implements AuthorizationDialogCon
         this.fullScreen = fullScreen;
         this.horizontalProgress = horizontalProgress;
         this.hideFullScreenTitle = hideFullScreenTitle;
+        this.progressColor = progressColor;
     }
 
     /**
