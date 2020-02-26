@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.wuman.android.auth"
     android:versionCode="001"
-    android:versionName="0.0.1-SNAPSHOT">
+    android:versionName="0.0.1-SNAPSHOT" >
 
     <uses-sdk android:targetSdkVersion="17" />
 
@@ -11,8 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:hardwareAccelerated="true"
-        tools:replace="android:appComponentFactory">
+        android:hardwareAccelerated="true" >
     </application>
 
 </manifest>
