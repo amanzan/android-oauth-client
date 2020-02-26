@@ -170,5 +170,4 @@ build/
 
 # signing config
 *.keystore
-gradle.properties
 sign.properties
