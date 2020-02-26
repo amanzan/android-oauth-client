@@ -49,11 +49,11 @@ dependencies {
     exclude group: 'junit', module: 'junit'
     exclude group: 'com.google.android', module: 'android'
   }
-  implementation 'com.google.oauth-client:google-oauth-client-java6:1.30.5'
+  implementation 'com.google.oauth-client:google-oauth-client:1.30.5'
   implementation 'com.google.http-client:google-http-client-jackson:1.29.2'
 
-  testCompile 'junit:junit:4.11'
-  testCompile('org.robolectric:robolectric:2.4') {
+  testImplementation 'junit:junit:4.12'
+  testImplementation('org.robolectric:robolectric:2.4') {
     exclude module: 'support-v4'
   }
 }
