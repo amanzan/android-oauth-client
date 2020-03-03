@@ -60,7 +60,7 @@ android {
 //apply plugin: "android-unit-test"
 
 dependencies {
-  implementation project(':library')
+  api project(':library')
   implementation('de.keyboardsurfer.android.widget:crouton:1.8.1') {
     exclude group: 'com.google.android', module: 'support-v4'
   }
